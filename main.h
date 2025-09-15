@@ -2,7 +2,7 @@
 #include <time.h>
 
 struct Cell {
-    struct Cell* adjacent_cells[4];
+    int adjacents;
 };
 
 struct Path {
@@ -12,8 +12,8 @@ struct Path {
 };
 
 enum Direction {
-    NORTH,
-    SOUTH,
-    WEST,
-    EAST
+    NORTH = 1,
+    SOUTH = 2,
+    WEST = 4,
+    EAST = 8
 };
