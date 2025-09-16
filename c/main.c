@@ -2,6 +2,7 @@
 #include "h/gen.h"
 #include "h/render.h"
 #include "h/solve.h"
+#include "h/player.h"
 
 
 

@@ -1,3 +1,9 @@
+/*
+Stack implementation for Maze generation, allowing to "undo" a "move", i.e. coming back to the previously generated cell.
+The stack consists of a list of (int) directions from the enum Direction.
+The stack should always be freed after generation.
+*/
+
 #include "h/stack.h"
 
 
