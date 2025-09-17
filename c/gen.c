@@ -1,5 +1,5 @@
 /*
-Logic behind the Maze generation, following the Randomized Depth-First Search algorithm.
+Logic behind the Maze generation, following the Origin Shift (tree chain) algorithm.
 The Maze is a m*n grid of cells.
 Each cell contains 3 values :
 - (int) adjacents → indicates which cells around itself have already been generated
