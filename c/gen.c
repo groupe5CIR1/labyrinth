@@ -19,7 +19,7 @@ struct Grid init_grid(int width, int height) {
 }
 
 struct Cell init_cell(int adjacents) {
-
+    return (struct Cell) {.adjacents = adjacents, .connections = 0, .type = GENERATED};
 }
 
 void update_cell(struct Grid* grid, struct Cell* cell) {
