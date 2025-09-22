@@ -20,10 +20,21 @@ struct Grid init_grid(int width, int height) {
         perror("Out of Memory error: could not allocate grid");
         exit(1);
     }
+    for (int i=0; i<width*height; i++) {
+        int x = i % width;
+        int y = i / width;
+        grid[i] = init_cell(x, y, width, height);
+    }
     return (struct Grid) {.cells = grid, .height = height, .width = width};
 }
 
-struct Cell init_cell(int adjacents) {
+struct Cell init_cell(int x, int y, int width, int height) {
+    int adjacents =         //boundary checks
+        (x == 0 ?           WEST : 0) |
+        (x == width-1 ?     EAST : 0) |
+        (y == 0 ?           NORTH : 0) |
+        (y == height-1 ?    SOUTH : 0);
+
     return (struct Cell) {.adjacents = adjacents, .connections = 0, .type = GENERATED};
 }
 
@@ -35,15 +46,17 @@ void init_starting_cell(struct Grid* grid, struct Cell* start) {
 }
 
 void update_neighbours(struct Grid* grid, struct Cell* cell) {
-    int index = cell - grid->cells;
-    int x = index % grid->width;
-    int y = index % grid->height;
-    
-    int i = ALL - cell->adjacents;
-    while(i >= 1) {
-        struct Cell* copy = cell;
-        
-        i >>= 1;
+    int dir = ALL ^ cell->adjacents;
+    int dirs[] = {-1, 1, grid->width, -grid->width};
+    int opp[] = {EAST, WEST, NORTH, SOUTH};
+    int i = 0;
+    while(dir) {
+        if (dir & 1) {
+            struct Cell* neighbour = cell + dirs[i];
+            neighbour->adjacents |= opp[i];
+        }
+        dir >>= 1;
+        i++;
     }
 }
 
