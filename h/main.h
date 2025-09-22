@@ -13,17 +13,19 @@ struct Cell {
 };
 
 struct Grid {
-    struct Cell** cells;
+    struct Cell* cells;
     int width;
     int height;
 };
 
 
 enum Direction {
+    NONE = 0,
     WEST = 1,
     EAST = 2,
     SOUTH = 4,
-    NORTH = 8
+    NORTH = 8,
+    ALL = 15
 };
 
 enum Type {
