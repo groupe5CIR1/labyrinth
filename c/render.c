@@ -17,7 +17,7 @@ char cell_char(int type) {
     switch (type) {
         case VISITED:   return 'O';
         case START:     return 'X';
-        case END:       return 'X';;
+        case END:       return 'X';
         default:        return ' ';
     }
 }
