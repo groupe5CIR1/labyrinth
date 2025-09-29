@@ -21,10 +21,10 @@ struct Grid {
 
 enum Direction {
     NONE = 0,
-    WEST = 1,
-    EAST = 2,
-    SOUTH = 4,
-    NORTH = 8,
+    WEST = 1,   //0001
+    EAST = 2,   //0010
+    SOUTH = 4,  //0100
+    NORTH = 8,  //1000
     ALL = 15
 };
 
@@ -38,6 +38,8 @@ enum Type {
 
 
 int random(int n);
+
+int opposite(int dir);
 
 
 #endif

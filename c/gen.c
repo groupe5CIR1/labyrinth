@@ -6,7 +6,7 @@ Each cell contains 3 values :
 - (int) connections → indicates its connections to other cells (used for rendering, refer to render.c for more informations)
 - (int) type → indicates the type of the cell (mostly used for rendering, refer to render.c for more informations)
 Those values should be updated during Maze generation every time a cell type is edited, using update_cell().
-The generation should use a stack to be able to "undo" a "move", i.e. coming back to the previous cell (refer to stack.c for more informations).
+The generation uses a stack to be able to "undo" a "move", i.e. coming back to the previous cell (refer to stack.c for more informations).
 */
 
 
@@ -39,14 +39,16 @@ struct Cell init_cell(int x, int y, int width, int height) {
 }
 
 //By default, the starting cell is on top left (coordinates (0,0)).
-void init_starting_cell(struct Grid* grid, struct Cell* start) {
+struct Cell* init_start(struct Grid* grid) {
+    struct Cell* start = &grid->cells[0];
     start->type = START;
     start->adjacents = NORTH + WEST;
     update_neighbours(grid, start);
+    return start;
 }
 
 void update_neighbours(struct Grid* grid, struct Cell* cell) {
-    int dir = ALL ^ cell->adjacents;
+    int dir = ALL - cell->adjacents;
     int dirs[] = {-1, 1, grid->width, -grid->width};
     int opp[] = {EAST, WEST, NORTH, SOUTH};
     int i = 0;
@@ -61,14 +63,72 @@ void update_neighbours(struct Grid* grid, struct Cell* cell) {
 }
 
 int choose_path(int adjacents) {
+    int dirs = ALL - adjacents;
+    if (!dirs) return 0;
 
+    int n = 0, bit = 1;
+    for (int i=0; i<4; i++, bit<<=1) {
+        if(dirs & bit) n++;
+    }
+    int r = random(n);
+
+    bit = 1;
+    for (int i=0; i<4; i++, bit<<=1) {
+        if (dirs & bit && --r < 0) return bit;
+    }
+
+    return 0;   //Should never be reached
 }
 
 
 /*
 Returns the ending cell, chosen randomly.
 */
-struct Cell* gen_path(struct Grid* grid, struct Cell* start) {
+struct Cell* gen_path(struct Grid* grid, struct Cell* from) {
     struct Stack stack = stack_init();
-    
+    from = init_start(grid);
+    int size = grid->height * grid->width;
+
+    struct Cell* to;
+    int visited = 1, dir;
+
+    while (visited < size) {
+        dir = choose_path(from->adjacents);
+        if (!dir) {
+            dir = stack_pop(&stack);
+            from = get_cell(grid, from, opposite(dir));
+        } else {
+            stack_push(&stack, dir);
+            to = get_cell(grid, from, dir);
+            connect_cells(from, to, dir);
+            update_neighbours(grid, to);
+            from = to;
+            visited++;
+        }
+    }
+
+    struct Cell* end = &grid->cells[size-1];
+    end->type = END;
+    return end;
 }
+
+struct Cell* get_cell(struct Grid* grid, struct Cell* cell, int dir) {
+    int i = cell - grid->cells;
+    int x = i % grid->width;
+    int y = i / grid->width;
+
+    if (dir == WEST  && x > 0)              return cell - 1;
+    if (dir == EAST  && x < grid->width-1)  return cell + 1;
+    if (dir == NORTH && y > 0)              return cell - grid->width;
+    if (dir == SOUTH && y < grid->height-1) return cell + grid->width;
+
+    return NULL; // out of bounds
+}
+
+void connect_cells(struct Cell* from, struct Cell* to, int dir) {
+    from->adjacents |= dir;
+    from->connections |= dir;
+    to->connections |= opposite(dir);
+    to->type = GENERATED;
+}
+

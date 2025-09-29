@@ -18,6 +18,14 @@ int random(int n) {
     return rand()%n;
 }
 
-
+int opposite(int dir) {
+    switch(dir) {
+        case WEST: return EAST;
+        case EAST: return WEST;
+        case NORTH: return SOUTH;
+        case SOUTH: return NORTH;
+        default: return NONE;
+    }
+}
 
 
