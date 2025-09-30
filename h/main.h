@@ -31,6 +31,7 @@ enum Direction {
 enum Type {
     VOID,
     GENERATED,
+    AVAILABLE,
     VISITED,
     START,
     END

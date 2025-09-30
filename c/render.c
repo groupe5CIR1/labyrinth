@@ -2,42 +2,97 @@
 Main logic for the Maze rendering.
 The Maze is a m*n grid of cells.
 Each cell is surrounded by walls with the characters _ and |. Those walls are defined by the (connections) variable of each cell.
-Eachc cell content is defined by its (type) variable from the enum Type :
+Each cell content is defined by its (type) variable from the enum Type :
 - VOID and GENERATED should be empty
+- AVAILABLE should contain the character •
 - VISITED should contain the character O
 - START and END should contain the character X
+
+An example of how the Maze is rendered :
+
+
++---+---+---+---+---+---+---+---+
+| X |       |   |       |       |
++   +---+   +   +---+   +---+   +
+| O | O   O   O |       |       |
++   +   +---+   +   +---+   +---+
+| O   O |     O   O   O     |   |
++---+---+   +---+---+   +---+   +
+|       |   |       | O   O |   |
++   +---+---+---+   +---+   +   +
+|       |       |       | O   O |
++   +---+---+   +---+   +---+   +
+|           |   | O   O   O   O |
++---+   +---+   +   +---+---+---+
+|       |     •   O |       |   |
++   +---+   +---+   +---+   +   +
+|               | •           X |
++---+---+---+---+---+---+---+---+
+
+Notes :
+- This maze is only an example for the rendering, this maze cannot be generated with the Origin Shift algorithm.
+- START and END are fixed, meaning that they should always render as an X (i.e. AVAILABLE and VISITED should not override them)
+
+
 */
 
 
 
 #include "h/render.h"
-#include"h/main.h"
+#include "h/main.h"
 
-char cell_char(int type) {
+
+
+char* cell_type(int type) {
     switch (type) {
-        case VISITED:   return 'O';
-        case START:     return 'X';
-        case END:       return 'X';
-        default:        return ' ';
+        case AVAILABLE: return " • ";
+        case VISITED:   return " O ";
+        case START:     return " X ";
+        case END:       return " X ";
+        default:        return "   ";
     }
 }
 
-void render_grid(struct Grid grid){
-    for(int i=0; i<grid.width; i++){
-        printf("__");
+void horizontal_border(int n) {
+    for (; n>0; n--) {
+        printf("+---");
     }
-    printf("\n");
-    for(int i = 0; i<grid.height*grid.width; i++){
-        printf("|");
-            struct Cell cell = grid.cells[i];
-            printf("%c", cell_char(cell.type));
-            switch(cell.connections){
-                case 2: printf("");
-                case 4: printf("");
-                case 6: printf("");
-                default: printf("__|");
-        }
-        if(i%grid.width == 0 && i!=0)
-        printf("\n");
-    }
+    printf("+\n");
 }
+
+void render(struct Grid grid) {
+    horizontal_border(grid.width);
+
+    struct Cell cell;
+    int size = 4*grid.width+2;
+
+    char* line = malloc(size);
+    char* below = malloc(size);
+
+    strcpy(line,"|");
+    strcpy(below,"+");
+
+    for (int i=0; i<(grid.width*grid.height); i++) {
+        cell = grid.cells[i];
+
+        strcat(line, cell_type(cell.type));
+        strcat(line, (cell.connections & EAST) ? " " : "|");
+
+        strcat(below, (cell.connections & SOUTH) ? "   +" : "---+");
+
+        if (i%grid.width == grid.width-1) {
+            printf("%s\n",line);
+            printf("%s\n",below);
+
+            strcpy(line,"|");
+            strcpy(below,"+");
+        }
+    }
+    free(line);
+    free(below);
+    horizontal_border(grid.width);
+}
+
+
+
+
