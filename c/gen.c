@@ -35,13 +35,13 @@ struct Cell init_cell(int x, int y, int width, int height) {
         (y == 0 ?           NORTH : 0) |
         (y == height-1 ?    SOUTH : 0);
 
-    return (struct Cell) {.adjacents = adjacents, .connections = 0, .type = GENERATED};
+    return (struct Cell) {.adjacents = adjacents, .connections = 0, .type = VOID};
 }
 
 //By default, the starting cell is on top left (coordinates (0,0)).
 struct Cell* init_start(struct Grid* grid) {
-    struct Cell* start = &grid->cells[0];
-    start->type = START;
+    struct Cell* start = &grid->cells;
+    start->type = VISITED;
     start->adjacents = NORTH + WEST;
     update_neighbours(grid, start);
     return start;
@@ -107,9 +107,7 @@ struct Cell* gen_path(struct Grid* grid, struct Cell* from) {
         }
     }
 
-    struct Cell* end = &grid->cells[size-1];
-    end->type = END;
-    return end;
+    return &grid->cells[size-1];
 }
 
 struct Cell* get_cell(struct Grid* grid, struct Cell* cell, int dir) {

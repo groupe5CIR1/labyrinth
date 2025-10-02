@@ -39,16 +39,16 @@ Notes :
 
 
 #include "h/render.h"
-#include "h/main.h"
 
 
 
-char* cell_type(int type) {
+char* cell_type(struct Grid grid, int type, int i) {
+    if (i % grid.height*grid.width == 0) return " X ";      //Checks for starting and ending cells
     switch (type) {
+        case VOID:      return "   ";
+        case GENERATED: return "   ";
         case AVAILABLE: return " • ";
         case VISITED:   return " O ";
-        case START:     return " X ";
-        case END:       return " X ";
         default:        return "   ";
     }
 }
@@ -75,7 +75,7 @@ void render(struct Grid grid) {
     for (int i=0; i<(grid.width*grid.height); i++) {
         cell = grid.cells[i];
 
-        strcat(line, cell_type(cell.type));
+        strcat(line, cell_type(grid, cell.type, i));
         strcat(line, (cell.connections & EAST) ? " " : "|");
 
         strcat(below, (cell.connections & SOUTH) ? "   +" : "---+");

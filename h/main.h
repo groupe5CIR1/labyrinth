@@ -32,9 +32,7 @@ enum Type {
     VOID,
     GENERATED,
     AVAILABLE,
-    VISITED,
-    START,
-    END
+    VISITED
 };
 
 
