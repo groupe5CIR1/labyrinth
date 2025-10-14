@@ -20,15 +20,29 @@ int main(int argc, char **argv) {
         return 1;
     }
 
+    srand(time(NULL));
+
     struct Grid grid = init_grid(width, height);
     gen_path(&grid, &grid.cells);
 
     render(grid);
 
-    //completer avec scanf pour choisir le mode (player ou solve, et quelle methode de solve)
 
+    char* input;
+    printf("\n",
+        "Please choose a mode :\n",
+        "- play : PLAY\n",
+        "- solve : SOLVE\n"
+    );
+    scanf("%s", input);
+    if (strcmp("PLAY", input) == 0) {
+        play(&grid);
+    }
+    if (strcmp("SOLVE", input) == 0) {
 
-    srand(time(NULL));
+    }
+
+    return 0;
 }
 
 
