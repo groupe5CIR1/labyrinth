@@ -6,8 +6,62 @@
 #include "h/solve.h"
 
 
+int get_solve_method() {
+    char* solve_input;
+    int method = -1;
+    bool valid_method = false;
+    while (!valid_method) {
+        printf(
+            "Choose a solving method : \n",
+            "- Depth First Search : DFS\n",
+            "- Right-Hand Method : RHM\n",
+            "- A* : A*\n",
+            "- go back to mode choice : BACK\n"
+        );
+        scanf("%s", solve_input);
 
-void solve_maze(struct Grid* grid) {
+        if (strcmp("BACK", solve_input) == 0) {
+            printf("Going back to mode choice...\n");
+            valid_method = true;
+        }
+        else if (strcmp("DFS", solve_input) == 0) {
+            valid_method = true;
+            method = DFS;
+        }
+        else if (strcmp("RHM", solve_input) == 0) {
+            valid_method = true;
+            method = RHM;
+        }
+        else if (strcmp("A*", solve_input) == 0) {
+            valid_method = true;
+            method = A_STAR;
+        }
+        else {
+            printf("Invalid input !\n");
+        }
+    }
+    return method;
+}
+
+void solve(struct Grid* grid, int method) {
+    switch (method) {
+    case DFS:
+        solve_dfs(grid);
+        break;
+    case RHM:
+        solve_rhm(grid);
+        break;
+    case A_STAR:
+        solve_a_star(grid);
+        break;
+    default:
+        printf("Invalid method !\nExiting...\n");
+        break;
+    }
+}
+
+
+void solve_dfs(struct Grid* grid) {
     int n = grid->width * grid->height;
 
     int* visited = malloc(n * sizeof(int));
@@ -69,5 +123,15 @@ void solve_maze(struct Grid* grid) {
     free_queue(q);
     free(visited);
     free(parent);
+}
+
+
+void solve_rhm(struct Grid* grid) {
+
+}
+
+
+void solve_a_star(struct Grid* grid) {
+
 }
 

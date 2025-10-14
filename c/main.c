@@ -44,19 +44,26 @@ int main(int argc, char **argv) {
             play(&grid);
         }
         else if (strcmp("SOLVE", input) == 0) {
-            valid_input = true;
-            printf("Solving...\n");
-            //solve
+            int method = get_solve_method();
+            if (method == -1) {
+                valid_input = false;
+            }
+            else {
+                valid_input = true;
+                solve(&grid, method);
+            }
         }
         else if (strcmp("QUIT", input) == 0) {
             valid_input = true;
             printf("Exiting...\n");
         }
-        printf("Invalid input !\n");
+        else {
+            printf("Invalid input !\n");
+        }
     }
 
     render(grid);
-    
+
     free(grid.cells);
     return 0;
 }
