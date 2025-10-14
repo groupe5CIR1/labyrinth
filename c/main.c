@@ -29,19 +29,35 @@ int main(int argc, char **argv) {
 
 
     char* input;
-    printf("\n",
-        "Please choose a mode :\n",
-        "- play : PLAY\n",
-        "- solve : SOLVE\n"
-    );
-    scanf("%s", input);
-    if (strcmp("PLAY", input) == 0) {
-        play(&grid);
-    }
-    if (strcmp("SOLVE", input) == 0) {
+    bool valid_input = false;
+    while (!valid_input) {
+        printf("\n",
+            "Please choose a mode :\n",
+            "- play : PLAY\n",
+            "- solve : SOLVE\n",
+            "- quit : QUIT\n"
+        );
+        scanf("%s", input);
 
+        if (strcmp("PLAY", input) == 0) {
+            valid_input = true;
+            play(&grid);
+        }
+        else if (strcmp("SOLVE", input) == 0) {
+            valid_input = true;
+            printf("Solving...\n");
+            //solve
+        }
+        else if (strcmp("QUIT", input) == 0) {
+            valid_input = true;
+            printf("Exiting...\n");
+        }
+        printf("Invalid input !\n");
     }
 
+    render(grid);
+    
+    free(grid.cells);
     return 0;
 }
 
