@@ -11,7 +11,7 @@ int get_solve_method() {
     int method = -1;
     bool valid_method = false;
     while (!valid_method) {
-        printf(
+        printf("\n",
             "Choose a solving method : \n",
             "- Depth First Search : DFS\n",
             "- Right-Hand Method : RHM\n",
@@ -127,7 +127,41 @@ void solve_dfs(struct Grid* grid) {
 
 
 void solve_rhm(struct Grid* grid) {
-
+    /*
+    The Right-Hand Method is an algorithm that only works for perfect mazes. It works by always keeping the right hand (also works with the left hand) on a wall, i.e. always go right. Because the maze is perfect (no loop), this algorithm ensures that every cell is checked until the end is found.
+    This implementation tracks the right-hand orientation in (int)facing.
+    The starting orientation should be SOUTH, because the starting position is the top-left corner of the maze.
+    The idea is to check the cell on the right, and keep turning left as long as no valid cell has been found.
+    If no valid cell has been found (dead end), turn back to the previous cell, and repeat the aglorithm.
+    The resulting path is stored in (struct Stack)stack, and each cell type along that path is modified for rendering purposes.
+    For now, the (struct Stack)stack is freed at the end of the algorithm, as there is no use for it.
+    */
+    struct Stack stack = stack_init();
+    struct Cell* cell = grid->cells;
+    struct Cell* neighbour;
+    int dirs[] = {SOUTH, WEST, NORTH, EAST};
+    int facing = 0;
+    int counter = 0;
+    while (cell != grid->end) {
+        neighbour = get_cell(grid, cell, dirs[facing]);
+        if (neighbour && (neighbour->connections & dirs[facing])) {
+            cell = neighbour;
+            cell->type = cell->type == GENERATED ? VISITED : GENERATED;
+            stack_push(&stack, dirs[facing]);
+            facing = ++facing % 4;      //increment facing index = rotate to the right
+            counter = 0;
+        }
+        else if (counter >= 3) {
+            cell->type = GENERATED;
+            cell = get_cell(grid, cell, opposite(stack_pop(&stack)));
+            counter = 0;
+        }
+        else {
+            facing = (facing + 3) % 4;      //decrement facing index = rotate to the left
+            counter++;
+        }
+    }
+    stack_destroy(&stack);
 }
 
 

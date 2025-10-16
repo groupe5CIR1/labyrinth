@@ -16,6 +16,7 @@ struct Grid {
     struct Cell* cells;
     int width;
     int height;
+    struct Cell* end;
 };
 
 

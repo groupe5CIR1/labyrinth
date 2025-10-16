@@ -40,8 +40,7 @@ int main(int argc, char **argv) {
         scanf("%s", input);
 
         if (strcmp("PLAY", input) == 0) {
-            valid_input = true;
-            play(&grid);
+            valid_input = play(&grid) == 0;
         }
         else if (strcmp("SOLVE", input) == 0) {
             int method = get_solve_method();
@@ -50,6 +49,8 @@ int main(int argc, char **argv) {
             }
             else {
                 valid_input = true;
+                clear_grid_type(&grid);
+                printf("Solving maze...\n");
                 solve(&grid, method);
             }
         }

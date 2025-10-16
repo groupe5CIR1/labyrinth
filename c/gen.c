@@ -5,7 +5,7 @@ Each cell contains 3 values :
 - (int) adjacents → indicates which cells around itself have already been generated
 - (int) connections → indicates its connections to other cells (used for rendering, refer to render.c for more informations)
 - (int) type → indicates the type of the cell (mostly used for rendering, refer to render.c for more informations)
-Those values should be updated during Maze generation every time a cell type is edited, using update_cell().
+Those values should be updated during Maze generation every time a cell type is modified, using update_cell().
 The generation uses a stack to be able to "undo" a "move", i.e. coming back to the previous cell (refer to stack.c for more informations).
 */
 
@@ -25,7 +25,7 @@ struct Grid init_grid(int width, int height) {
         int y = i / width;
         grid[i] = init_cell(x, y, width, height);
     }
-    return (struct Grid) {.cells = grid, .height = height, .width = width};
+    return (struct Grid) {.cells = grid, .height = height, .width = width, .end = NULL};
 }
 
 struct Cell init_cell(int x, int y, int width, int height) {
@@ -81,10 +81,11 @@ int choose_path(int adjacents) {
 }
 
 
-/*
-Returns the ending cell, chosen randomly.
-*/
-struct Cell* gen_path(struct Grid* grid, struct Cell* from) {
+void gen_path(struct Grid* grid, struct Cell* from) {
+    /*
+    Generates the maze following the Origin Shift algorithm. Refer to the head comment for more informations.
+    The ending cell is currently defined as the bottom-right cell.
+    */
     struct Stack stack = stack_init();
     from = init_start(grid);
     int size = grid->height * grid->width;
@@ -107,7 +108,7 @@ struct Cell* gen_path(struct Grid* grid, struct Cell* from) {
         }
     }
 
-    return &grid->cells[size-1];
+    grid->end = &grid->cells[size-1];
 }
 
 struct Cell* get_cell(struct Grid* grid, struct Cell* cell, int dir) {

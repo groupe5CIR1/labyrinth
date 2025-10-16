@@ -29,8 +29,8 @@ int input_checks(int connections) {
     do {
         dir = player_input();
         if (dir == ALL)  {
-            printf("Exiting the game.\n");
-            exit(0);
+            printf("Exiting the game...\n");
+            return -1;
         }
         bl = dir && (connections & dir);
         if (!bl) {
@@ -46,6 +46,11 @@ int input_checks(int connections) {
 }
 
 void update_neighbours_type(struct Grid* grid, struct Cell* cell, bool remove) {
+    /*
+    Updates neighbouring cells type upon a player move.
+    More specifically, each neighbouring cell will update its type depending on whether the move is forward or backward.
+    This is used specifically for rendering purposes, see render.c for more informations.
+    */
     struct Cell* neighbour;
     cell->type = remove ? AVAILABLE : VISITED;
     for (int d=WEST; d<=NORTH; d<<=1) {
@@ -58,13 +63,22 @@ void update_neighbours_type(struct Grid* grid, struct Cell* cell, bool remove) {
     }
 }
 
-void play(struct Grid* grid) {
+int play(struct Grid* grid) {
+    /*
+    Allows the player to move in the maze.
+    Returns :
+    - (0) : the game is completed.
+    - (-1) : stop playing.
+    */
     struct Cell* cell = grid->cells;
+    update_neighbours_type(grid, cell, false);      //In case this is not the first time the player plays on the same maze
     struct Stack stack = stack_init();
     int dir;
     bool first_move = true;
-    while(cell != &grid->cells[grid->height*grid->width-1]) {
+    while(cell != grid->end) {
         dir = input_checks(cell->connections);
+        if (dir == -1) return -1;
+
         if (!first_move && (dir == opposite(stack.list[stack.size-1]))) {
             stack_pop(&stack);
         } else {
@@ -78,6 +92,7 @@ void play(struct Grid* grid) {
         render(*grid);
     }
     printf("Congratulations ! You have completed the Maze !\n");
+    return 0;
 }
 
 

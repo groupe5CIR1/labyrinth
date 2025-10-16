@@ -40,10 +40,15 @@ Notes :
 
 #include "h/render.h"
 
-
+void clear_grid_type(struct Grid* grid) {
+    for (int i=1; i < grid->height * grid->width; i++) {
+        grid->cells[i].type = GENERATED;
+    }
+    grid->cells->type = VISITED;
+}
 
 char* cell_type(struct Grid grid, int type, int i) {
-    if (i % grid.height*grid.width == 0) return " X ";      //Checks for starting and ending cells
+    if (i == 0 || &grid.cells[i] == grid.end) return " X ";      //Checks for starting and ending cells
     switch (type) {
         case VOID:      return "   ";
         case GENERATED: return "   ";

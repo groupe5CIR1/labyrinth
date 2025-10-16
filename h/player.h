@@ -10,7 +10,7 @@
 int player_input();
 int input_checks(int connections);
 void update_neighbours_type(struct Grid* grid, struct Cell* cell, bool remove);
-void play(struct Grid* grid);
+int play(struct Grid* grid);
 
 
 #endif
