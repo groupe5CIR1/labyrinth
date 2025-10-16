@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <time.h>
+#include <ctype.h>
 
 
 struct Cell {
@@ -37,6 +38,7 @@ enum Type {
 };
 
 
+void to_uppercase(char *str);
 int rand_int(int n);
 int opposite(int dir);
 struct Cell* get_cell(struct Grid* grid, struct Cell* cell, int dir);

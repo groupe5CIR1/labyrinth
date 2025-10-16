@@ -40,6 +40,7 @@ int main(int argc, char **argv) {
             "- quit : QUIT\n"
         );
         scanf("%5s", input);
+        to_uppercase(input);
 
         if (strcmp("PLAY", input) == 0) {
             valid_input = play(&grid, &player) == 0;
@@ -84,6 +85,12 @@ int opposite(int dir) {
         case NORTH: return SOUTH;
         case SOUTH: return NORTH;
         default: return NONE;
+    }
+}
+
+void to_uppercase(char *str) {
+    for (int i=0; str[i] != '\0'; i++) {
+        str[i] = toupper(str[i]);
     }
 }
 

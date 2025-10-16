@@ -4,7 +4,6 @@
 
 
 #include "../h/solve.h"
-#include <time.h>
 
 int get_solve_method() {
     char solve_input[5];
@@ -20,6 +19,7 @@ int get_solve_method() {
             "- go back to mode choice : BACK\n"
         );
         scanf("%4s", solve_input);
+        to_uppercase(solve_input);
 
         if (strcmp("BACK", solve_input) == 0) {
             printf("Going back to mode choice...\n");
@@ -45,20 +45,30 @@ int get_solve_method() {
 }
 
 void solve(struct Grid* grid, int method) {
+    struct timespec start, end;
+    double t;
     switch (method) {
     case DFS:
+        clock_gettime(CLOCK_MONOTONIC, &start);
         solve_dfs(grid);
+        clock_gettime(CLOCK_MONOTONIC, &end);
         break;
     case RHM:
+        clock_gettime(CLOCK_MONOTONIC, &start);
         solve_rhm(grid);
+        clock_gettime(CLOCK_MONOTONIC, &end);
         break;
     case A_STAR:
+        clock_gettime(CLOCK_MONOTONIC, &start);
         solve_a_star(grid);
+        clock_gettime(CLOCK_MONOTONIC, &end);
         break;
     default:
         printf("Invalid method !\nExiting...\n");
-        break;
+        return;
     }
+    t = (end.tv_sec-start.tv_sec)*1000.0 + (end.tv_nsec-start.tv_nsec) / 1e6;
+    printf("Solving completed in %f ms\n", t);
 }
 
 

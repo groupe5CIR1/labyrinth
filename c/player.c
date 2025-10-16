@@ -14,12 +14,13 @@ int player_input() {
 
     printf("Enter move : ");
     scanf("%4s",input);
+    to_uppercase(input);
 
-    if (strcmp(input, "z") == 0)    return NORTH;
-    if (strcmp(input, "q") == 0)    return WEST;
-    if (strcmp(input, "s") == 0)    return SOUTH;
-    if (strcmp(input, "d") == 0)    return EAST;
-    if (strcmp(input, "STOP") == 0) return ALL;
+    if (strcmp(input, "Z") == 0)    return NORTH;
+    if (strcmp(input, "Q") == 0)    return WEST;
+    if (strcmp(input, "S") == 0)    return SOUTH;
+    if (strcmp(input, "D") == 0)    return EAST;
+    if (strcmp(input, "BACK") == 0) return ALL;
     return NONE;
 }
 
@@ -35,11 +36,11 @@ int input_checks(int connections) {
         bl = dir && (connections & dir);
         if (!bl) {
             printf("Invalid input. Please use the following inputs :\n");
-            if (connections & NORTH)  printf("- z : go NORTH\n");
-            if (connections & WEST)   printf("- q : go WEST\n");
-            if (connections & SOUTH)  printf("- s : go SOUTH\n");
-            if (connections & EAST)   printf("- d : go EAST\n");
-            printf("- STOP : stop playing the game\n");
+            if (connections & NORTH)  printf("- Z : go NORTH\n");
+            if (connections & WEST)   printf("- Q : go WEST\n");
+            if (connections & SOUTH)  printf("- S : go SOUTH\n");
+            if (connections & EAST)   printf("- D : go EAST\n");
+            printf("- BACK : go back the to mode menu\n");
         }
     } while (!bl);
     return dir;
