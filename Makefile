@@ -28,5 +28,5 @@ stack.o: c/stack.c h/stack.h
 	gcc $(FLAGS) -c c/stack.c
 
 clean:
-	rm -f $(OBJS) maze
+	rm -f $(OBJS) maze .vscode/*
 

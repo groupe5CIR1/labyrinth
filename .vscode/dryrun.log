@@ -1,8 +1,0 @@
-make --dry-run --keep-going --print-directory
-make: Entering directory '/home/isen/C_WSL/A2/labyrinth'
-gcc -Wall -Wextra -c c/main.c
-gcc -Wall -Wextra -c c/gen.c
-gcc -Wall -Wextra -c c/player.c
-gcc -Wall -Wextra main.o gen.o player.o queue.o render.o solve.o stack.o -o maze
-make: Leaving directory '/home/isen/C_WSL/A2/labyrinth'
- 
