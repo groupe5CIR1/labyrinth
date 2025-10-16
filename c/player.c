@@ -4,16 +4,16 @@
 
 
 
-#include "h/player.h"
+#include "../h/player.h"
+#include "../h/render.h"
 
 
 
 int player_input() {
-    char input[8];
+    char input[5];
 
     printf("Enter move : ");
-    fgets(input, sizeof(input), stdin);
-    input[strcspn(input, "\n")] = '\0';
+    scanf("%4s",input);
 
     if (strcmp(input, "z") == 0)    return NORTH;
     if (strcmp(input, "q") == 0)    return WEST;
@@ -52,8 +52,8 @@ void update_neighbours_type(struct Grid* grid, struct Cell* cell, bool remove) {
     This is used specifically for rendering purposes, see render.c for more informations.
     */
     struct Cell* neighbour;
-    cell->type = remove ? AVAILABLE : VISITED;
-    for (int d=WEST; d<=NORTH; d<<=1) {
+    if (!remove) cell->type = VISITED;
+    for (int d=WEST; d<ALL; d<<=1) {
         if (cell->connections & d) {
             neighbour = get_cell(grid, cell, d);
             if (neighbour->type != VISITED) {
@@ -63,102 +63,35 @@ void update_neighbours_type(struct Grid* grid, struct Cell* cell, bool remove) {
     }
 }
 
-int play(struct Grid* grid) {
+int play(struct Grid* grid, struct Cell** cell) {
     /*
     Allows the player to move in the maze.
     Returns :
     - (0) : the game is completed.
     - (-1) : stop playing.
     */
-    struct Cell* cell = grid->cells;
-    update_neighbours_type(grid, cell, false);      //In case this is not the first time the player plays on the same maze
+    update_neighbours_type(grid, *cell, false);      //In case the player plays again on the maze
     struct Stack stack = stack_init();
     int dir;
     bool first_move = true;
-    while(cell != grid->end) {
-        dir = input_checks(cell->connections);
+    while(*cell != grid->end) {
+        dir = input_checks((*cell)->connections);
         if (dir == -1) return -1;
 
         if (!first_move && (dir == opposite(stack.list[stack.size-1]))) {
             stack_pop(&stack);
+            (*cell)->type = AVAILABLE;
         } else {
             first_move = false;
             stack_push(&stack, dir);
         }
-        update_neighbours_type(grid, cell, true);
-        cell = get_cell(grid, cell, dir);
-        update_neighbours_type(grid, cell, false);
+        update_neighbours_type(grid, *cell, true);
+        (*cell) = get_cell(grid, *cell, dir);
+        update_neighbours_type(grid, *cell, false);
 
         render(*grid);
     }
     printf("Congratulations ! You have completed the Maze !\n");
     return 0;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-@Deprecated
-void update_index(int width ,int connections, int *current_index){
-    switch(connections){
-        case NORTH: *current_index -= width; break;
-        case SOUTH: *current_index += width; break;
-        case EAST: *current_index++; break;
-        case WEST: *current_index--; break;
-    }
-}
-
-void move_player(struct Grid* grid, int* player_index, char input) {
-    struct Cell* current = &grid->cells[*player_index];
-
-    int dir = NONE;
-    switch (tolower(input)) {
-        case 'z': dir = NORTH; break;
-        case 's': dir = SOUTH; break;
-        case 'q': dir = WEST;  break;   
-        case 'd': dir = EAST;  break;
-        default:
-            printf("Invalid input. Use W/A/S/D.\n");
-            return;
-    }
-    if(!((*player_index+1)%grid->width==0 
-        || grid->width > *player_index 
-        || player_index > grid->width*(grid->height-1) 
-        || (*player_index-1)%grid->width 
-        || player_index ==0)
-    ){
-        update_index(grid->width, current->connections, player_index);
-    }
-    
-    }
-*/
 

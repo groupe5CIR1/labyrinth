@@ -38,7 +38,7 @@ Notes :
 
 
 
-#include "h/render.h"
+#include "../h/render.h"
 
 void clear_grid_type(struct Grid* grid) {
     for (int i=1; i < grid->height * grid->width; i++) {
@@ -69,10 +69,14 @@ void render(struct Grid grid) {
     horizontal_border(grid.width);
 
     struct Cell cell;
-    int size = 4*grid.width+2;
+    int size = 10*grid.width+2;
 
     char* line = malloc(size);
     char* below = malloc(size);
+    if (line == NULL || below == NULL) {
+        printf("Out of Memory error : could not render the grid\n");
+        exit(EXIT_FAILURE);
+    }
 
     strcpy(line,"|");
     strcpy(below,"+");
@@ -95,7 +99,6 @@ void render(struct Grid grid) {
     }
     free(line);
     free(below);
-    horizontal_border(grid.width);
 }
 
 

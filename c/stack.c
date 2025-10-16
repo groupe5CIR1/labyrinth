@@ -4,7 +4,7 @@ The stack consists of a list of (int) directions from the enum Direction.
 The stack should always be freed after generation.
 */
 
-#include "h/stack.h"
+#include "../h/stack.h"
 
 
 

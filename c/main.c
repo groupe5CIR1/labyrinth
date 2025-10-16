@@ -1,8 +1,8 @@
-#include "h/main.h"
-#include "h/gen.h"
-#include "h/render.h"
-#include "h/solve.h"
-#include "h/player.h"
+#include "../h/main.h"
+#include "../h/gen.h"
+#include "../h/render.h"
+#include "../h/solve.h"
+#include "../h/player.h"
 
 
 
@@ -23,24 +23,26 @@ int main(int argc, char **argv) {
     srand(time(NULL));
 
     struct Grid grid = init_grid(width, height);
-    gen_path(&grid, &grid.cells);
+    gen_path(&grid, grid.cells);
 
     render(grid);
 
+    struct Cell* player = grid.cells;
 
-    char* input;
+    char input[6];
     bool valid_input = false;
     while (!valid_input) {
-        printf("\n",
-            "Please choose a mode :\n",
-            "- play : PLAY\n",
-            "- solve : SOLVE\n",
+        printf(
+            "\n"
+            "Please choose a mode :\n"
+            "- play : PLAY\n"
+            "- solve : SOLVE\n"
             "- quit : QUIT\n"
         );
-        scanf("%s", input);
+        scanf("%5s", input);
 
         if (strcmp("PLAY", input) == 0) {
-            valid_input = play(&grid) == 0;
+            valid_input = play(&grid, &player) == 0;
         }
         else if (strcmp("SOLVE", input) == 0) {
             int method = get_solve_method();
@@ -52,6 +54,7 @@ int main(int argc, char **argv) {
                 clear_grid_type(&grid);
                 printf("Solving maze...\n");
                 solve(&grid, method);
+                render(grid);
             }
         }
         else if (strcmp("QUIT", input) == 0) {
@@ -63,8 +66,6 @@ int main(int argc, char **argv) {
         }
     }
 
-    render(grid);
-
     free(grid.cells);
     return 0;
 }
@@ -72,8 +73,8 @@ int main(int argc, char **argv) {
 
 
 
-int random(int n) {
-    return rand()%n;
+int rand_int(int n) {
+    return (int)rand()%n;
 }
 
 int opposite(int dir) {
@@ -86,4 +87,16 @@ int opposite(int dir) {
     }
 }
 
+struct Cell* get_cell(struct Grid* grid, struct Cell* cell, int dir) {
+    int i = cell - grid->cells;
+    int x = i % grid->width;
+    int y = i / grid->width;
+
+    if (dir == WEST  && x > 0)              return cell - 1;
+    if (dir == EAST  && x < grid->width-1)  return cell + 1;
+    if (dir == NORTH && y > 0)              return cell - grid->width;
+    if (dir == SOUTH && y < grid->height-1) return cell + grid->width;
+
+    return NULL; // out of bounds
+}
 

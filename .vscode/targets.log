@@ -6,7 +6,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Mon Sep 29 13:30:35 2025
+# Make data base, printed on Thu Oct 16 17:51:20 2025
 
 # Variables
 
@@ -66,14 +66,19 @@ MAKEFILE_LIST := Makefile
 @F = $(notdir $@)
 # automatic
 ?D = $(patsubst %/,%,$(dir $?))
+# makefile (from 'Makefile', line 1)
+FLAGS = -Wall -Wextra
 # automatic
 *F = $(notdir $*)
 # automatic
+ 
 <D = $(patsubst %/,%,$(dir $<))
 # environment
 VSCODE_NLS_CONFIG = {"userLocale":"en","osLocale":"en","resolvedLanguage":"en","defaultMessagesFile":"/home/isen/.vscode-server/bin/6f17636121051a53c88d3e605c491d22af2ba755/out/nls.messages.json","locale":"en","availableLanguages":{}}
 # default
 MAKE_HOST := x86_64-pc-linux-gnu
+# makefile (from 'Makefile', line 2)
+OBJS = main.o gen.o player.o queue.o render.o solve.o stack.o
 # makefile
 SHELL = /bin/sh
 # default
@@ -85,7 +90,7 @@ MAKELEVEL := 0
 # default
 MAKE = $(MAKE_COMMAND)
 # environment
-PATH = /home/isen/.vscode-server/bin/6f17636121051a53c88d3e605c491d22af2ba755/bin/remote-cli:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/wsl/lib:/mnt/c/Program Files/Common Files/Oracle/Java/javapath:/mnt/c/Program Files (x86)/Common Files/Oracle/Java/java8path:/mnt/c/Program Files (x86)/Common Files/Oracle/Java/javapath:/mnt/c/windows/system32:/mnt/c/windows:/mnt/c/windows/System32/Wbem:/mnt/c/windows/System32/WindowsPowerShell/v1.0/:/mnt/c/windows/System32/OpenSSH/:/mnt/c/Program Files/Git/cmd:/mnt/c/Users/doorm/AppData/Local/Microsoft/WindowsApps:/mnt/c/Users/doorm/AppData/Local/Programs/Microsoft VS Code/bin:/mnt/c/Users/doorm/AppData/Local/GitHubDesktop/bin
+PATH = /home/isen/.vscode-server/bin/6f17636121051a53c88d3e605c491d22af2ba755/bin/remote-cli:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/wsl/lib:/mnt/c/Program Files/Common Files/Oracle/Java/javapath:/mnt/c/Program Files (x86)/Common Files/Oracle/Java/java8path:/mnt/c/Program Files (x86)/Common Files/Oracle/Java/javapath:/mnt/c/windows/system32:/mnt/c/windows:/mnt/c/windows/System32/Wbem:/mnt/c/windows/System32/WindowsPowerShell/v1.0/:/mnt/c/windows/System32/OpenSSH/:/mnt/c/Program Files/Git/cmd:/mnt/c/Program Files/PuTTY/:/mnt/c/Users/doorm/AppData/Local/Microsoft/WindowsApps:/mnt/c/Users/doorm/AppData/Local/Programs/Microsoft VS Code/bin:/mnt/c/Users/doorm/AppData/Local/GitHubDesktop/bin
 # default
 MAKEFILES := 
 # automatic
@@ -111,7 +116,7 @@ LOGNAME = isen
 # environment
 VSCODE_WSL_EXT_LOCATION = /mnt/c/Users/doorm/.vscode/extensions/ms-vscode-remote.remote-wsl-0.99.0
 # makefile
-.DEFAULT_GOAL := 
+.DEFAULT_GOAL := all
 # environment
 DISPLAY = :0
 # environment
@@ -123,7 +128,7 @@ _ = /home/isen/.vscode-server/bin/6f17636121051a53c88d3e605c491d22af2ba755/node
 # environment
 XDG_RUNTIME_DIR = /mnt/wslg/runtime-dir
 # environment
-VSCODE_IPC_HOOK_CLI = /mnt/wslg/runtime-dir/vscode-ipc-8d315a31-305a-49b6-b774-a817019d1f0e.sock
+VSCODE_IPC_HOOK_CLI = /mnt/wslg/runtime-dir/vscode-ipc-832087f8-71c6-41ee-8f41-113ddb5d1da4.sock
 # environment
 HOME = /home/isen
 # environment
@@ -143,7 +148,7 @@ WSL_DISTRO_NAME = Debian
 # environment
 VSCODE_ESM_ENTRYPOINT = vs/workbench/api/node/extensionHostProcess
 # variable set hash-table stats:
-# Load=66/1024=6%, Rehash=0, Collisions=1/95=1%
+# Load=68/1024=7%, Rehash=0, Collisions=1/103=1%
 
 # Pattern-specific Variable Values
 
@@ -151,9 +156,9 @@ VSCODE_ESM_ENTRYPOINT = vs/workbench/api/node/extensionHostProcess
 
 # Directories
 
-# . (device 2096, inode 35270): 7 files, no impossibilities.
+# . (device 2096, inode 35270): 15 files, no impossibilities.
 
-# 7 files, no impossibilities in 1 directories.
+# 15 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -161,14 +166,77 @@ VSCODE_ESM_ENTRYPOINT = vs/workbench/api/node/extensionHostProcess
 
 # Files
 
+player.o: c/player.c h/player.h h/gen.h h/render.h h/main.h
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 16):
+	gcc $(FLAGS) -c c/player.c
+
+maze: main.o gen.o player.o queue.o render.o solve.o stack.o
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has been updated.
+#  Needs to be updated (-q is set).
+# variable set hash-table stats:
+ 
+# Load=0/32=0%, Rehash=0, Collisions=0/4=0%
+#  recipe to execute (from 'Makefile', line 7):
+	gcc $(FLAGS) $(OBJS) -o maze
+
+# Not a target:
+c/render.c:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2025-09-16 12:12:32.823231542
+#  Last modified 2025-10-16 17:51:18.567827715
 #  File has been updated.
- 
-make: *** No rule to make target 'all'.  Stop.
+#  Successfully updated.
 
+render.o: c/render.c h/render.h h/main.h
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 22):
+	gcc $(FLAGS) -c c/render.c
+
+# Not a target:
+c/main.c:
+#  Implicit rule search has been done.
+#  Last modified 2025-10-16 17:49:43.127965911
+#  File has been updated.
+#  Successfully updated.
+
+clean:
+#  Implicit rule search has not been done.
+ 
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 31):
+	rm -f $(OBJS) maze
+
+# Not a target:
+h/solve.h:
+#  Implicit rule search has been done.
+#  Last modified 2025-10-16 17:39:59.989021268
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+c/player.c:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+h/gen.h:
+#  Implicit rule search has been done.
+#  Last modified 2025-10-16 17:39:40.089063179
+#  File has been updated.
 #  Successfully updated.
 
 # Not a target:
@@ -177,27 +245,148 @@ make: *** No rule to make target 'all'.  Stop.
 #  Modification time never checked.
 #  File has not been updated.
 
+queue.o: c/queue.c h/queue.h
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 19):
+	gcc $(FLAGS) -c c/queue.c
+
 # Not a target:
-all:
+h/queue.h:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+all: maze
 #  Command line target.
 #  Implicit rule search has been done.
 #  File does not exist.
+#  File has been updated.
+#  Needs to be updated (-q is set).
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/4=0%
+
+gen.o: c/gen.c h/gen.h h/stack.h h/main.h
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 13):
+	gcc $(FLAGS) -c c/gen.c
+
+solve.o: c/solve.c h/solve.h h/queue.h h/stack.h h/main.h
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 25):
+	gcc $(FLAGS) -c c/solve.c
+
+# Not a target:
+c/stack.c:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
 #  File has not been updated.
 
+main.o: c/main.c h/main.h h/gen.h h/render.h h/solve.h h/player.h
+#  Implicit rule search has not been done.
+#  Implicit/static pattern stem: ''
+#  Last modified 2025-10-16 17:48:16.176110926
+#  File has been updated.
+#  Needs to be updated (-q is set).
+# automatic
+# @ := main.o
+# automatic
+# * := 
+# automatic
+# < := c/main.c
+# automatic
+# + := c/main.c h/main.h h/gen.h h/render.h h/solve.h h/player.h
+# automatic
+# % := 
+# automatic
+# ^ := c/main.c h/main.h h/gen.h h/render.h h/solve.h h/player.h
+# automatic
+# ? := c/main.c
+# automatic
+# | := 
+# variable set hash-table stats:
+# Load=8/32=25%, Rehash=0, Collisions=1/12=8%
+ 
+#  recipe to execute (from 'Makefile', line 10):
+	gcc $(FLAGS) -c c/main.c
+
+# Not a target:
+h/render.h:
+#  Implicit rule search has been done.
+#  Last modified 2025-10-16 17:39:52.989036055
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+h/stack.h:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+c/queue.c:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+c/solve.c:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+h/player.h:
+#  Implicit rule search has been done.
+#  Last modified 2025-10-16 17:39:47.797047024
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+h/main.h:
+#  Implicit rule search has been done.
+#  Last modified 2025-10-16 17:48:01.48013449
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+.SUFFIXES:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+c/gen.c:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+stack.o: c/stack.c h/stack.h
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 28):
+	gcc $(FLAGS) -c c/stack.c
+
 # files hash-table stats:
-# Load=4/1024=0%, Rehash=0, Collisions=0/14=0%
+# Load=27/1024=3%, Rehash=0, Collisions=1/82=1%
 # VPATH Search Paths
 
 # No 'vpath' search paths.
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 12 / storage = 86 B / avg = 7 B
-# current buf: size = 8162 B / used = 86 B / count = 12 / avg = 7 B
+# strcache buffers: 1 (0) / strings = 36 / storage = 301 B / avg = 8 B
+# current buf: size = 8162 B / used = 301 B / count = 36 / avg = 8 B
 
-# strcache performance: lookups = 16 / hit rate = 25%
+# strcache performance: lookups = 80 / hit rate = 55%
 # hash-table stats:
-# Load=12/8192=0%, Rehash=0, Collisions=0/16=0%
-# Finished Make data base on Mon Sep 29 13:30:35 2025
+# Load=36/8192=0%, Rehash=0, Collisions=0/80=0%
+# Finished Make data base on Thu Oct 16 17:51:20 2025
 
  

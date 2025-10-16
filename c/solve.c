@@ -3,22 +3,23 @@
 */
 
 
-#include "h/solve.h"
-
+#include "../h/solve.h"
+#include <time.h>
 
 int get_solve_method() {
-    char* solve_input;
+    char solve_input[5];
     int method = -1;
     bool valid_method = false;
     while (!valid_method) {
-        printf("\n",
-            "Choose a solving method : \n",
-            "- Depth First Search : DFS\n",
-            "- Right-Hand Method : RHM\n",
-            "- A* : A*\n",
+        printf(
+            "\n"
+            "Choose a solving method : \n"
+            "- Depth First Search : DFS\n"
+            "- Right-Hand Method : RHM\n"
+            "- A* : A*\n"
             "- go back to mode choice : BACK\n"
         );
-        scanf("%s", solve_input);
+        scanf("%4s", solve_input);
 
         if (strcmp("BACK", solve_input) == 0) {
             printf("Going back to mode choice...\n");
@@ -141,24 +142,22 @@ void solve_rhm(struct Grid* grid) {
     struct Cell* neighbour;
     int dirs[] = {SOUTH, WEST, NORTH, EAST};
     int facing = 0;
-    int counter = 0;
     while (cell != grid->end) {
         neighbour = get_cell(grid, cell, dirs[facing]);
-        if (neighbour && (neighbour->connections & dirs[facing])) {
-            cell = neighbour;
-            cell->type = cell->type == GENERATED ? VISITED : GENERATED;
-            stack_push(&stack, dirs[facing]);
-            facing = ++facing % 4;      //increment facing index = rotate to the right
-            counter = 0;
-        }
-        else if (counter >= 3) {
-            cell->type = GENERATED;
-            cell = get_cell(grid, cell, opposite(stack_pop(&stack)));
-            counter = 0;
+        if (!neighbour || !(cell->connections & dirs[facing])) {
+            facing = (facing + 3) % 4;      //decrement facing index = rotate to the left
         }
         else {
-            facing = (facing + 3) % 4;      //decrement facing index = rotate to the left
-            counter++;
+            if (stack.list[stack.size-1] == opposite(dirs[facing])) {
+                cell->type = GENERATED;
+                stack_pop(&stack);
+            }
+            else {
+                cell->type = VISITED;
+                stack_push(&stack, dirs[facing]);
+            }
+            cell = neighbour;
+            facing = (facing + 1) % 4;      //increment facing index = rotate to the right
         }
     }
     stack_destroy(&stack);
@@ -166,6 +165,6 @@ void solve_rhm(struct Grid* grid) {
 
 
 void solve_a_star(struct Grid* grid) {
-
+    (void)grid;     //unused for now
 }
 

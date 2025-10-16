@@ -37,9 +37,8 @@ enum Type {
 };
 
 
-int random(int n);
-
+int rand_int(int n);
 int opposite(int dir);
-
+struct Cell* get_cell(struct Grid* grid, struct Cell* cell, int dir);
 
 #endif

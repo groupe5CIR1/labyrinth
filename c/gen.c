@@ -10,7 +10,7 @@ The generation uses a stack to be able to "undo" a "move", i.e. coming back to t
 */
 
 
-#include "h/gen.h"
+#include "../h/gen.h"
 
 
 
@@ -40,7 +40,7 @@ struct Cell init_cell(int x, int y, int width, int height) {
 
 //By default, the starting cell is on top left (coordinates (0,0)).
 struct Cell* init_start(struct Grid* grid) {
-    struct Cell* start = &grid->cells;
+    struct Cell* start = grid->cells;
     start->type = VISITED;
     start->adjacents = NORTH + WEST;
     update_neighbours(grid, start);
@@ -48,17 +48,9 @@ struct Cell* init_start(struct Grid* grid) {
 }
 
 void update_neighbours(struct Grid* grid, struct Cell* cell) {
-    int dir = ALL - cell->adjacents;
-    int dirs[] = {-1, 1, grid->width, -grid->width};
-    int opp[] = {EAST, WEST, NORTH, SOUTH};
-    int i = 0;
-    while(dir) {
-        if (dir & 1) {
-            struct Cell* neighbour = cell + dirs[i];
-            neighbour->adjacents |= opp[i];
-        }
-        dir >>= 1;
-        i++;
+    for (int dir=1; dir<ALL; dir<<=1) {
+        struct Cell* neighbour = get_cell(grid, cell, dir);
+        if (neighbour) neighbour->adjacents |= opposite(dir);
     }
 }
 
@@ -70,7 +62,7 @@ int choose_path(int adjacents) {
     for (int i=0; i<4; i++, bit<<=1) {
         if(dirs & bit) n++;
     }
-    int r = random(n);
+    int r = rand_int(n);
 
     bit = 1;
     for (int i=0; i<4; i++, bit<<=1) {
@@ -80,6 +72,12 @@ int choose_path(int adjacents) {
     return 0;   //Should never be reached
 }
 
+struct Cell* get_last_available_cell(struct Grid* grid, struct Cell* cell, struct Stack* stack) {
+    while(cell->adjacents == ALL) {
+        cell = get_cell(grid, cell, opposite(stack_pop(stack)));
+    }
+    return cell;
+}
 
 void gen_path(struct Grid* grid, struct Cell* from) {
     /*
@@ -96,8 +94,7 @@ void gen_path(struct Grid* grid, struct Cell* from) {
     while (visited < size) {
         dir = choose_path(from->adjacents);
         if (!dir) {
-            dir = stack_pop(&stack);
-            from = get_cell(grid, from, opposite(dir));
+            from = get_last_available_cell(grid, from, &stack);
         } else {
             stack_push(&stack, dir);
             to = get_cell(grid, from, dir);
@@ -111,23 +108,12 @@ void gen_path(struct Grid* grid, struct Cell* from) {
     grid->end = &grid->cells[size-1];
 }
 
-struct Cell* get_cell(struct Grid* grid, struct Cell* cell, int dir) {
-    int i = cell - grid->cells;
-    int x = i % grid->width;
-    int y = i / grid->width;
-
-    if (dir == WEST  && x > 0)              return cell - 1;
-    if (dir == EAST  && x < grid->width-1)  return cell + 1;
-    if (dir == NORTH && y > 0)              return cell - grid->width;
-    if (dir == SOUTH && y < grid->height-1) return cell + grid->width;
-
-    return NULL; // out of bounds
-}
 
 void connect_cells(struct Cell* from, struct Cell* to, int dir) {
     from->adjacents |= dir;
     from->connections |= dir;
     to->connections |= opposite(dir);
+    to->adjacents |= opposite(dir);
     to->type = GENERATED;
 }
 

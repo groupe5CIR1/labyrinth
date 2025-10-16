@@ -2,9 +2,11 @@
 #define SOLVE
 
 
-#include "h/main.h"
-#include "h/queue.h"
-#include "h/stack.h"
+#include "../h/main.h"
+#include "../h/queue.h"
+#include "../h/stack.h"
+
+#include <string.h>
 
 enum SOLVE_METHOD {
     DFS,
