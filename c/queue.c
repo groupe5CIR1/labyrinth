@@ -5,12 +5,12 @@
 struct Queue* create_queue(int initial_capacity) {
     struct Queue* queue = malloc(sizeof(struct Queue));
     if (queue == NULL) {
-        printf("Out of Memory error : could not allocate queue structure\n");
+        perror("Out of Memory error : could not allocate queue structure\n");
         exit(EXIT_FAILURE);
     }
     queue->array = malloc(initial_capacity * sizeof(int));
     if (queue->array == NULL) {
-        printf("Out of Memory error : could not allocate queue array\n");
+        perror("Out of Memory error : could not allocate queue array\n");
         exit(EXIT_FAILURE);
     }
     queue->front = 0;
@@ -25,7 +25,7 @@ void queue_push(struct Queue* queue, int value) {
         queue->capacity *= 2;
         queue->array = realloc(queue->array, queue->capacity * sizeof(int));
         if (queue->array == NULL) {
-            printf("Out of Memory error : could not resize queue\n");
+            perror("Out of Memory error : could not resize queue\n");
             exit(EXIT_FAILURE);
         }
     }
@@ -37,7 +37,7 @@ void queue_push(struct Queue* queue, int value) {
 
 int queue_pop(struct Queue* queue) {
     if (queue->size <= 0) {
-        printf("Queue underflow error: could not pop element in Queue\n");
+        perror("Queue underflow error: could not pop element in Queue\n");
         exit(1);
     }
     int first = queue->array[queue->front];

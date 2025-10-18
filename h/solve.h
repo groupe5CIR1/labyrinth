@@ -8,7 +8,7 @@
 
 #include <string.h>
 
-enum SOLVE_METHOD {
+enum Solve_Method {
     DFS,
     RHM,
     A_STAR

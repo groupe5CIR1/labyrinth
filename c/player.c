@@ -1,5 +1,8 @@
 /*
-
+Logic behind the player movements in the Maze.
+The player should be able to continue playing after coming back to the mode menu.
+Each time the player moves to a cell, the surrounding cells' type should be updated to show where the player is allowed to go.
+The player's path should also be shown by updating the cells' type, and is stored in a (struct Stack*)stack.
 */
 
 
@@ -36,11 +39,11 @@ int input_checks(int connections) {
         bl = dir && (connections & dir);
         if (!bl) {
             printf("Invalid input. Please use the following inputs :\n");
-            if (connections & NORTH)  printf("- Z : go NORTH\n");
-            if (connections & WEST)   printf("- Q : go WEST\n");
-            if (connections & SOUTH)  printf("- S : go SOUTH\n");
-            if (connections & EAST)   printf("- D : go EAST\n");
-            printf("- BACK : go back the to mode menu\n");
+            if (connections & NORTH)  printf("- go NORTH : Z\n");
+            if (connections & WEST)   printf("- go WEST : Q\n");
+            if (connections & SOUTH)  printf("- go SOUTH : S\n");
+            if (connections & EAST)   printf("- go EAST : D\n");
+            printf("- go back to mode choice : BACK\n");
         }
     } while (!bl);
     return dir;
@@ -48,7 +51,7 @@ int input_checks(int connections) {
 
 void update_neighbours_type(struct Grid* grid, struct Cell* cell, bool remove) {
     /*
-    Updates neighbouring cells type upon a player move.
+    Updates neighbouring cells' type upon a player move.
     More specifically, each neighbouring cell will update its type depending on whether the move is forward or backward.
     This is used specifically for rendering purposes, see render.c for more informations.
     */
@@ -71,7 +74,8 @@ int play(struct Grid* grid, struct Cell** cell) {
     - (0) : the game is completed.
     - (-1) : stop playing.
     */
-    update_neighbours_type(grid, *cell, false);      //In case the player plays again on the maze
+    update_neighbours_type(grid, *cell, false);
+    render(*grid);
     struct Stack stack = stack_init();
     int dir;
     bool first_move = true;

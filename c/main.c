@@ -25,6 +25,10 @@ int main(int argc, char **argv) {
     struct Grid grid = init_grid(width, height);
     gen_path(&grid, grid.cells);
 
+    int method = get_end_cell_method();
+    if (method == -1) return 0;
+    else gen_end_cell(&grid, method);
+
     render(grid);
 
     struct Cell* player = grid.cells;
@@ -46,7 +50,7 @@ int main(int argc, char **argv) {
             valid_input = play(&grid, &player) == 0;
         }
         else if (strcmp("SOLVE", input) == 0) {
-            int method = get_solve_method();
+            method = get_solve_method();
             if (method == -1) {
                 valid_input = false;
             }
@@ -88,7 +92,15 @@ int opposite(int dir) {
     }
 }
 
-void to_uppercase(char *str) {
+int bitcount(int bit) {
+    int n=0;
+    for (int dir=1; dir<ALL; dir<<=1) {
+        if (dir & bit) n++;
+    }
+    return n;
+}
+
+void to_uppercase(char* str) {
     for (int i=0; str[i] != '\0'; i++) {
         str[i] = toupper(str[i]);
     }

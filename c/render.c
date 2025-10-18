@@ -1,15 +1,14 @@
 /*
 Main logic for the Maze rendering.
-The Maze is a m*n grid of cells.
-Each cell is surrounded by walls with the characters _ and |. Those walls are defined by the (connections) variable of each cell.
-Each cell content is defined by its (type) variable from the enum Type :
+The Maze is a m*n continuous grid of cells (i.e. one continuous array, but represented as a grid).
+Each cell is surrounded by walls with the characters --- and |. Those walls are defined by the (connections) value of each cell.
+Each cell content is defined by its (int)type value from the enum Type :
 - VOID and GENERATED should be empty
 - AVAILABLE should contain the character •
 - VISITED should contain the character O
-- START and END should contain the character X
+- exceptions : the starting and ending cells should contain the character X
 
-An example of how the Maze is rendered :
-
+An example of how the Maze should be rendered :
 
 +---+---+---+---+---+---+---+---+
 | X |       |   |       |       |
@@ -31,9 +30,7 @@ An example of how the Maze is rendered :
 
 Notes :
 - This maze is only an example for the rendering, this maze cannot be generated with the Origin Shift algorithm.
-- START and END are fixed, meaning that they should always render as an X (i.e. AVAILABLE and VISITED should not override them)
-
-
+- the starting and ending cells are fixed, meaning that they should always render as an X (i.e. their (int)type should not override the rendering)
 */
 
 
@@ -69,7 +66,7 @@ void render(struct Grid grid) {
     horizontal_border(grid.width);
 
     struct Cell cell;
-    int size = 10*grid.width+2;
+    int size = 4*grid.width+2;
 
     char* line = malloc(size);
     char* below = malloc(size);

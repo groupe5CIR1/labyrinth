@@ -1,5 +1,12 @@
 /*
+Logic behing the Maze solving.
+There are (currently) two implemented algorithms to solve the Maze :
+- Depth-Firsth Search (refer to solve_dfs() for more informations)
+- Right Hand Method (refer to solve_rhm() for more informations)
+Each solving method can be chosen by the player, although the A* aglorithm has not been implemented yet.
+After a bit of testing, it would seem that the Right Hand Method is overall faster than Depth First Search.
 
+Note : for some reason, it seems that VSCode struggles to understand that <time.h> is included and shows an error, but the compilation works perfectly fine.
 */
 
 
@@ -73,44 +80,44 @@ void solve(struct Grid* grid, int method) {
 
 
 void solve_dfs(struct Grid* grid) {
-    int n = grid->width * grid->height;
+    int size = grid->width * grid->height;
 
-    int* visited = malloc(n * sizeof(int));
-    int* parent  = malloc(n * sizeof(int));
+    int* visited = malloc(size * sizeof(int));
+    int* parent  = malloc(size * sizeof(int));
     if (!visited || !parent) {
         perror("malloc failed");
         exit(EXIT_FAILURE);
     }
 
     // Initialize arrays
-    for (int i = 0; i < n; i++) {
+    for (int i=0; i<size; i++) {
         visited[i] = 0;
-        parent[i]  = -1;
+        parent[i] = -1;
     }
 
     int start_idx = 0;
-    int end_idx   = n - 1;
+    int end_idx = grid->end - grid->cells;
 
     struct Queue* q = create_queue(64);
     queue_push(q, start_idx);
     visited[start_idx] = 1;
 
     while (q->size > 0) {
-        int cur = queue_pop(q);
-        if (cur == end_idx) break;
+        int cur_idx = queue_pop(q);
+        if (cur_idx == end_idx) break;
 
-        struct Cell* cell = &grid->cells[cur];
-        int x = cur % grid->width;
-        int y = cur / grid->width;
+        struct Cell* cell = &grid->cells[cur_idx];
+        int x = cur_idx % grid->width;
+        int y = cur_idx / grid->width;
 
-        struct { int dir, dx, dy; } moves[4] = {
+        struct {int dir, dx, dy;} moves[4] = {
             {WEST,  -1,  0},
             {EAST,   1,  0},
             {SOUTH,  0,  1},
             {NORTH,  0, -1}
         };
 
-        for (int i = 0; i < 4; i++) {
+        for (int i=0; i<4; i++) {
             if (cell->connections & moves[i].dir) {
                 int nx = x + moves[i].dx;
                 int ny = y + moves[i].dy;
@@ -118,7 +125,7 @@ void solve_dfs(struct Grid* grid) {
                 int next = ny * grid->width + nx;
                 if (!visited[next]) {
                     visited[next] = 1;
-                    parent[next]  = cur;
+                    parent[next] = cur_idx;
                     queue_push(q, next);
                 }
             }
@@ -126,9 +133,8 @@ void solve_dfs(struct Grid* grid) {
     }
 
     // Mark path
-    for (int p = end_idx; p != -1; p = parent[p]) {
-        if (grid->cells[p].type == GENERATED)
-            grid->cells[p].type = VISITED;
+    for (int p=end_idx; p!=-1; p=parent[p]) {
+        if (grid->cells[p].type == GENERATED) grid->cells[p].type = VISITED;
     }
 
     free_queue(q);

@@ -11,8 +11,8 @@ The stack should always be freed after generation.
 struct Stack stack_init() {
     int* list = malloc(2*sizeof(int));
     if (list == NULL ) {
-        printf("Out Of Memory error: could not create Stack");
-        exit(1);
+        perror("Out Of Memory error: could not create Stack");
+        exit(EXIT_FAILURE);
     }
     return (struct Stack) {.list = list, .size = 0, .capacity = 2};
 }
@@ -29,8 +29,8 @@ void stack_push(struct Stack* stack, int data) {
         int new_capacity = 2*stack->capacity;
         int* new_list = realloc(stack->list, new_capacity*sizeof(int));
         if (new_list == NULL) {
-            printf("Out Of Memory error: could not resize Stack\n");
-            exit(1);
+            perror("Out Of Memory error: could not resize Stack\n");
+            exit(EXIT_FAILURE);
         }
         stack->list = new_list;
         stack->capacity = new_capacity;
@@ -42,8 +42,8 @@ void stack_push(struct Stack* stack, int data) {
 
 int stack_pop(struct Stack* stack) {
     if (stack->size == 0) {
-        printf("Stack underflow error: could not pop element in Stack\n");
-        exit(1);
+        perror("Stack underflow error: could not pop element in Stack\n");
+        exit(EXIT_FAILURE);
     }
     int last = stack->list[stack->size-1];
     stack->size--;

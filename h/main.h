@@ -3,6 +3,7 @@
 
 #include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>
 #include <time.h>
 #include <ctype.h>
 
@@ -38,8 +39,9 @@ enum Type {
 };
 
 
-void to_uppercase(char *str);
+void to_uppercase(char* str);
 int rand_int(int n);
+int bitcount(int bit);
 int opposite(int dir);
 struct Cell* get_cell(struct Grid* grid, struct Cell* cell, int dir);
 
